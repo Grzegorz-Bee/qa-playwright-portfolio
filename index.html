@@ -177,13 +177,13 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="name">QA Automation Portfolio</h1>
-            <p class="title">Software Quality Engineer | Test Automation Architect</p>
+            <h1 class="name" data-testid="portfolio-name">QA Automation Portfolio</h1>
+            <p class="title" data-testid="portfolio-title">Software Quality Engineer | Test Automation Architect</p>
             <div class="social-links">
-                <a href="https://github.com/grzeh/qa-playwright-portfolio" target="_blank">
+                <a href="https://github.com/Grzegorz-Bee" target="_blank" data-testid="github-link">
                     <i data-lucide="github" size="20"></i> GitHub
                 </a>
-                <a href="#" target="_blank">
+                <a href="https://www.linkedin.com/feed/" target="_blank" data-testid="linkedin-link">
                     <i data-lucide="linkedin" size="20"></i> LinkedIn
                 </a>
                 <a href="mailto:your.email@example.com">
@@ -202,8 +202,8 @@
 
         <section id="skills">
             <h2>Tech Stack</h2>
-            <div class="grid">
-                <div class="card">
+            <div class="grid" data-testid="tech-stack-grid">
+                <div class="card" data-testid="languages-card">
                     <div class="card-title"><i data-lucide="layers" size="18"></i> Languages</div>
                     <div class="skill-tags">
                         <span class="tag"><i class="devicon-typescript-plain colored"></i> TypeScript</span>
@@ -215,7 +215,7 @@
                         <span class="tag"><i class="devicon-groovy-plain colored"></i> Groovy</span>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card" data-testid="frameworks-card">
                     <div class="card-title"><i data-lucide="test-tube" size="18"></i> Frameworks</div>
                     <div class="skill-tags">
                         <span class="tag"><i class="devicon-playwright-plain colored"></i> Playwright</span>
@@ -273,7 +273,7 @@
                 <p class="card-desc" style="margin-bottom: 1rem;">
                     Demonstrating dynamic API calls within a static GitHub Pages site.
                 </p>
-                <div id="api-result" class="about-text" style="padding: 1rem; background: #000; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--border-color);">
+                <div id="api-result" data-testid="api-result" class="about-text" style="padding: 1rem; background: #000; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--border-color);">
                     Loading user data...
                 </div>
             </div>
