@@ -82,11 +82,11 @@ const App = () => {
         <h2>Featured Framework</h2>
         <div className="card" data-testid="featured-framework-card">
           <div className="card-title">Playwright POM Architecture</div>
-          <p className="card-desc">
+          <p className="card-desc" data-testid="featured-framework-desc">
             A production-ready test automation framework using Playwright, TypeScript, and Page Object Model (POM). 
             Includes automatic reporting, retry logic, and multi-browser support.
           </p>
-          <a href="https://github.com/Grzegorz-Bee/qa-playwright-portfolio" className="project-link" data-testid="framework-link">
+          <a href="https://github.com/Grzegorz-Bee/qa-playwright-portfolio" className="project-link" data-testid="featured-framework-link">
             View Repository <ExternalLink size={16} />
           </a>
         </div>

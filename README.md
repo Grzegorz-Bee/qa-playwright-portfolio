@@ -108,7 +108,7 @@ This project is optimized for deployment on Vercel:
 
 1. Connect your GitHub repository to Vercel.
 2. Vercel will automatically detect the project and deploy it.
-3. The serverless function in `/api/index.py` will handle form submissions using Python/Flask.
+3. The serverless function in `/src/api/index.py` will handle form submissions using Python/Flask.
 4. UI will interact with the API seamlessly using the rewrites in `vercel.json`.
 
 ---
