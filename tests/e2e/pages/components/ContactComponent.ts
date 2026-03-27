@@ -1,24 +1,28 @@
 import { Locator, Page, expect } from '@playwright/test';
 
 export class ContactComponent {
-  readonly section: Locator;
-  readonly nameInput: Locator;
-  readonly emailInput: Locator;
-  readonly messageInput: Locator;
-  readonly submitBtn: Locator;
-  readonly statusMessage: Locator;
+  private constructor(
+    readonly section: Locator,
+    readonly nameInput: Locator,
+    readonly emailInput: Locator,
+    readonly messageInput: Locator,
+    readonly submitBtn: Locator,
+    readonly statusMessage: Locator,
+  ) {}
 
-  private constructor(private page: Page) {
-    this.section = page.getByTestId('contact-section');
-    this.nameInput = page.getByTestId('contact-name');
-    this.emailInput = page.getByTestId('contact-email');
-    this.messageInput = page.getByTestId('contact-message');
-    this.submitBtn = page.getByTestId('contact-submit');
-    this.statusMessage = page.getByTestId('contact-status-message');
-  }
-
-  static build(page: Page): ContactComponent {
-    return new ContactComponent(page);
+  static async build(page: Page): Promise<ContactComponent> {
+    const section = page.getByTestId('contact-section');
+    const nameInput = page.getByTestId('contact-name');
+    const emailInput = page.getByTestId('contact-email');
+    const messageInput = page.getByTestId('contact-message');
+    const submitBtn = page.getByTestId('contact-submit');
+    const statusMessage = page.getByTestId('contact-status-message');
+    await expect(section).toBeVisible();
+    await expect(nameInput).toBeVisible();
+    await expect(emailInput).toBeVisible();
+    await expect(messageInput).toBeVisible();
+    await expect(submitBtn).toBeVisible();
+    return new ContactComponent(section, nameInput, emailInput, messageInput, submitBtn, statusMessage);
   }
 
   async checkVisibility() {

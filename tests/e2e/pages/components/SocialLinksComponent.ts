@@ -1,16 +1,17 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class SocialLinksComponent {
-  readonly github: Locator;
-  readonly linkedin: Locator;
+  private constructor(
+    readonly github: Locator,
+    readonly linkedin: Locator,
+  ) {}
 
-  private constructor(private page: Page) {
-    this.github = page.getByTestId('github-link');
-    this.linkedin = page.getByTestId('linkedin-link');
-  }
-
-  static build(page: Page): SocialLinksComponent {
-    return new SocialLinksComponent(page);
+  static async build(page: Page): Promise<SocialLinksComponent> {
+    const github = page.getByTestId('github-link');
+    const linkedin = page.getByTestId('linkedin-link');
+    await expect(github).toBeVisible();
+    await expect(linkedin).toBeVisible();
+    return new SocialLinksComponent(github, linkedin);
   }
 
   async checkVisibility() {

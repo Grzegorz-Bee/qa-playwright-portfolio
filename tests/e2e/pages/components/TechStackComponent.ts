@@ -1,22 +1,26 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class TechStackComponent {
-  readonly grid: Locator;
-  readonly languagesCard: Locator;
-  readonly frameworksCard: Locator;
-  readonly apiTestingCard: Locator;
-  readonly cicdCard: Locator;
+  private constructor(
+    readonly grid: Locator,
+    readonly languagesCard: Locator,
+    readonly frameworksCard: Locator,
+    readonly apiTestingCard: Locator,
+    readonly cicdCard: Locator,
+  ) {}
 
-  private constructor(private page: Page) {
-    this.grid = page.getByTestId('tech-stack-grid');
-    this.languagesCard = page.getByTestId('languages-card');
-    this.frameworksCard = page.getByTestId('frameworks-card');
-    this.apiTestingCard = page.getByTestId('api-testing-card');
-    this.cicdCard = page.getByTestId('cicd-card');
-  }
-
-  static build(page: Page): TechStackComponent {
-    return new TechStackComponent(page);
+  static async build(page: Page): Promise<TechStackComponent> {
+    const grid = page.getByTestId('tech-stack-grid');
+    const languagesCard = page.getByTestId('languages-card');
+    const frameworksCard = page.getByTestId('frameworks-card');
+    const apiTestingCard = page.getByTestId('api-testing-card');
+    const cicdCard = page.getByTestId('cicd-card');
+    await expect(grid).toBeVisible();
+    await expect(languagesCard).toBeVisible();
+    await expect(frameworksCard).toBeVisible();
+    await expect(apiTestingCard).toBeVisible();
+    await expect(cicdCard).toBeVisible();
+    return new TechStackComponent(grid, languagesCard, frameworksCard, apiTestingCard, cicdCard);
   }
 
   async checkVisibility() {
