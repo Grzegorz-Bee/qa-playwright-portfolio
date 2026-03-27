@@ -4,6 +4,7 @@ import { SocialLinksComponent } from './components/SocialLinksComponent';
 import { AboutComponent } from './components/AboutComponent';
 import { TechStackComponent } from './components/TechStackComponent';
 import { FeaturedFrameworkComponent } from './components/FeaturedFrameworkComponent';
+import { ContactComponent } from './components/ContactComponent';
 
 export class PortfolioPage {
   readonly header: HeaderComponent;
@@ -11,6 +12,7 @@ export class PortfolioPage {
   readonly about: AboutComponent;
   readonly techStack: TechStackComponent;
   readonly featuredFramework: FeaturedFrameworkComponent;
+  readonly contact: ContactComponent;
 
   private constructor(private page: Page) {
     this.header = HeaderComponent.build(page);
@@ -18,6 +20,7 @@ export class PortfolioPage {
     this.about = AboutComponent.build(page);
     this.techStack = TechStackComponent.build(page);
     this.featuredFramework = FeaturedFrameworkComponent.build(page);
+    this.contact = ContactComponent.build(page);
   }
 
   static build(page: Page): PortfolioPage {
