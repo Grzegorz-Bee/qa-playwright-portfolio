@@ -3,12 +3,12 @@ name: Vercel staged deployment
 on:
   pull_request:
     branches: [main, master]
-  push:
-    branches: [main, master]
+    types: [opened, synchronize, reopened, closed]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 concurrency:
   group: vercel-staged-${{ github.ref }}
@@ -21,6 +21,7 @@ env:
 jobs:
   preview-deploy:
     name: Deploy preview to Vercel
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     outputs:
       preview_url: ${{ steps.deploy.outputs.preview_url }}
@@ -33,6 +34,14 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Install dependencies
         run: npm ci
@@ -51,12 +60,17 @@ jobs:
         shell: bash
         run: |
           preview_url="$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})"
+          preview_url="$(echo "$preview_url" | tr -d '\r' | xargs)"
+          if [[ "$preview_url" != http://* && "$preview_url" != https://* ]]; then
+            preview_url="https://$preview_url"
+          fi
           echo "preview_url=$preview_url" >> "$GITHUB_OUTPUT"
           echo "Preview deployment available at $preview_url"
 
   e2e:
     name: Run E2E tests against preview
     needs: preview-deploy
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -77,6 +91,7 @@ jobs:
       - name: Run Playwright E2E tests against preview deployment
         env:
           PLAYWRIGHT_BASE_URL: ${{ needs.preview-deploy.outputs.preview_url }}
+          VERCEL_BYPASS_TOKEN: ${{ secrets.VERCEL_BYPASS_TOKEN }}
         run: npx playwright test
 
       - name: Upload Playwright report
@@ -89,34 +104,14 @@ jobs:
             test-results
           if-no-files-found: ignore
 
-  production-deploy:
-    name: Promote to production on Vercel
+  merge-pr-to-master:
+    name: Merge passing PR into master
     needs: e2e
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.base.ref == 'master' && needs.e2e.result == 'success'
     runs-on: ubuntu-latest
-    environment:
-      name: production
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Pull Vercel production environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build production artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy production artifacts
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Merge pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --merge --delete-branch

@@ -14,17 +14,31 @@ export class PortfolioPage {
   readonly featuredFramework: FeaturedFrameworkComponent;
   readonly contact: ContactComponent;
 
-  private constructor(private page: Page) {
-    this.header = HeaderComponent.build(page);
-    this.socialLinks = SocialLinksComponent.build(page);
-    this.about = AboutComponent.build(page);
-    this.techStack = TechStackComponent.build(page);
-    this.featuredFramework = FeaturedFrameworkComponent.build(page);
-    this.contact = ContactComponent.build(page);
+  private constructor(
+    private page: Page,
+    header: HeaderComponent,
+    socialLinks: SocialLinksComponent,
+    about: AboutComponent,
+    techStack: TechStackComponent,
+    featuredFramework: FeaturedFrameworkComponent,
+    contact: ContactComponent,
+  ) {
+    this.header = header;
+    this.socialLinks = socialLinks;
+    this.about = about;
+    this.techStack = techStack;
+    this.featuredFramework = featuredFramework;
+    this.contact = contact;
   }
 
-  static build(page: Page): PortfolioPage {
-    return new PortfolioPage(page);
+  static async build(page: Page): Promise<PortfolioPage> {
+    const header = await HeaderComponent.build(page);
+    const socialLinks = await SocialLinksComponent.build(page);
+    const about = await AboutComponent.build(page);
+    const techStack = await TechStackComponent.build(page);
+    const featuredFramework = await FeaturedFrameworkComponent.build(page);
+    const contact = await ContactComponent.build(page);
+    return new PortfolioPage(page, header, socialLinks, about, techStack, featuredFramework, contact);
   }
 
   async navigate() {

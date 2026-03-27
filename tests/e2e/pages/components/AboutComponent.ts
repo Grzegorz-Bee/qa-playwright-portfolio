@@ -1,16 +1,17 @@
-import { Page, Locator } from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 
 export class AboutComponent {
-  readonly section: Locator;
-  readonly text: Locator;
+  private constructor(
+      readonly section: Locator,
+      readonly text: Locator
+  ) {}
 
-  private constructor(private page: Page) {
-    this.section = page.getByTestId('about-section');
-    this.text = page.getByTestId('about-text');
-  }
-
-  static build(page: Page): AboutComponent {
-    return new AboutComponent(page);
+  static async build(page: Page): Promise<AboutComponent> {
+    const section = page.getByTestId('about-section');
+    const text = page.getByTestId('about-text');
+    await expect(section).toBeVisible();
+    await expect(text).toBeVisible();
+    return new AboutComponent(section, text);
   }
 
   async checkVisibility() {

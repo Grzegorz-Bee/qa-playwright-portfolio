@@ -5,8 +5,8 @@ test.describe('Contact Form Functionality', () => {
   let portfolioPage: PortfolioPage;
 
   test.beforeEach(async ({ page }) => {
-    portfolioPage = PortfolioPage.build(page);
-    await portfolioPage.navigate();
+    await page.goto('/');
+    portfolioPage = await PortfolioPage.build(page);
   });
 
   test('should display contact section and form elements', async () => {

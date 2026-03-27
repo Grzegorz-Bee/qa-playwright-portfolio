@@ -3,4 +3,8 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+dist/
+.venv/
 .env
+.vercel
+.env*.local

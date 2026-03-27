@@ -1,10 +1,6 @@
 name: Scheduled E2E Tests
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   schedule:
     # Run every day at 6:00 AM UTC
     - cron: '0 6 * * *'
