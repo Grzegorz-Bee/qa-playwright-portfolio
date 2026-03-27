@@ -1,125 +1,205 @@
-## 🌐 Portfolio Website
+# QA Automation Portfolio - Playwright, TypeScript, React & Python API
 
-You can view my technology stack and skills in action at:
-**[https://grzeh.github.io/qa-playwright-portfolio/](https://grzeh.github.io/qa-playwright-portfolio/)**
+## 🌐 Live Portfolio
 
----
+Production site: **https://qa-playwright-portfolio.vercel.app/**
 
-# QA Automation Portfolio - Playwright & TypeScript
+## 📌 Overview
 
-Welcome to my professional QA Automation portfolio! This project demonstrates high-quality end-to-end (E2E) and API testing using **Playwright** with **TypeScript**.
+This repository contains a QA-focused portfolio application together with automated coverage for both the frontend experience and the backend contact endpoint.
 
-## 🚀 Key Features
+The stack combines:
 
-- **Page Object Model (POM)**: Scalable and maintainable test architecture.
-- **Dynamic Content & API**: Features a dynamic Contact Form with Vercel Serverless Functions.
-- **Cross-browser Testing**: Configuration for Chromium, Firefox, and WebKit.
-- **E2E Tests**: Robust UI tests including navigation, interaction, and API mocking.
-- **Vercel Integration**: Ready for deployment with Vercel-specific configurations and serverless routes.
-- **TypeScript**: Type-safe tests and frontend interactions.
+- `React` + `Vite` for the portfolio UI
+- `Playwright` + `TypeScript` for end-to-end coverage
+- `pytest` for backend API validation
+- `Python` + `Flask` for the contact form API served through a Vercel Function
+
+## 🚀 What This Project Demonstrates
+
+- Page Object Model structure for maintainable Playwright tests
+- Cross-browser E2E coverage for Chromium, Firefox, and WebKit
+- API validation for the contact form endpoint
+- A hybrid frontend + Python backend setup deployed on Vercel
+- GitHub Actions workflow for preview deployments and automated E2E checks
 
 ## 📁 Project Structure
 
 ```text
-├── api/                  # Vercel Serverless Functions (Python)
-│   └── index.py         # Form submission handler (Flask)
-├── requirements.txt      # Python dependencies
-├── pages/                # Page Object Model classes
-│   ├── BasePage.ts       # Shared base page with common utilities
-│   └── GoogleSearch.ts   # Example page object for UI tests
-├── tests/                # Test suites
-│   ├── e2e/              # UI/End-to-End tests
-│   └── api/              # API validation tests
-├── playwright.config.ts  # Playwright configuration
-├── package.json          # Project dependencies and scripts
-└── README.md             # This document
+├── src/
+│   ├── api/
+│   │   └── index.py            # Flask contact API used by Vercel rewrites
+│   ├── components/             # React UI components
+│   ├── styles/                 # Frontend styles
+│   ├── App.jsx                 # Main portfolio page
+│   └── main.jsx                # React entry point
+├── tests/
+│   ├── api/
+│   │   └── test_index.py       # pytest coverage for the Flask contact API
+│   └── e2e/
+│       ├── pages/              # Page Objects and reusable UI components
+│       └── tests/              # Playwright specs
+├── .github/workflows/
+│   └── vercel-deployment.yml   # Preview deploy + Playwright validation workflow
+├── playwright.config.ts        # Playwright projects and environment-aware base URL
+├── vercel.json                 # Vercel build output and rewrite rules
+├── vite.config.ts              # Vite configuration
+├── requirements.txt            # Python dependencies
+├── package.json                # NPM scripts and frontend dependencies
+└── README.md                   # Project documentation
 ```
 
 ## 🛠️ Prerequisites
 
-To run this project, you need:
-- **Node.js** (v18 or higher)
-- **NPM** (installed with Node.js)
-- **Python** (v3.9 or higher, for local API development)
-- **Vercel CLI** (optional, for local serverless function testing)
+To work with the project locally, install:
+
+- `Node.js` 20+
+- `npm`
+- `Python` 3.12 recommended (`3.9+` should work for local development)
+- `pip`
+- `Vercel CLI` (optional, useful when you want local parity with Vercel configuration)
 
 ## 💻 Getting Started
 
-1. **Clone the repository**:
+1. Clone the repository:
+
    ```bash
-   git clone <your-repo-url>
+   git clone <your-repository-url>
    cd qa-playwright-portfolio
    ```
 
-2. **Install Node.js dependencies**:
+2. Install Node.js dependencies:
+
    ```bash
    npm install
    ```
 
-3. **Install Python dependencies (for local API testing)**:
+3. Create a virtual environment:
+
    ```bash
-   # Create a virtual environment
    python -m venv .venv
-   
-   # Activate the virtual environment (Windows)
+   ```
+
+4. Activate the virtual environment.
+
+   On Windows:
+
+   ```bash
    .venv\Scripts\activate
-   
-   # Activate the virtual environment (macOS/Linux)
+   ```
+
+   On macOS/Linux:
+
+   ```bash
    source .venv/bin/activate
-   
-   # Install Flask and dependencies
+   ```
+
+5. Install Python dependencies:
+
+   ```bash
    pip install -r requirements.txt
    ```
 
-5. **Install Playwright Browsers**:
+6. Install Playwright browsers:
+
    ```bash
    npx playwright install
    ```
 
-6. **Run the tests**:
-   ```bash
-   # Run all tests
-   npm test
+7. Start the frontend locally:
 
-   # Run tests in UI mode
-   npm run test:ui
+   ```bash
+   npm run dev
    ```
 
-## 📊 View Report
+### Optional: pull Vercel settings locally
 
-After running the tests, an HTML report is generated. To open it:
+If you want local parity with the hosted environment, use:
+
+```bash
+vercel pull
+vercel env pull
+```
+
+Keep secrets in Vercel Environment Variables instead of committing them to the repository.
+
+## ▶️ Available Scripts
+
+```bash
+npm run dev         # Start the Vite development server
+npm run build       # Create a production build in dist/
+npm run preview     # Preview the production build locally
+npm test            # Run Playwright E2E tests
+npm run test:ui     # Run Playwright in UI mode
+npm run test:unit   # Run Vitest unit tests
+npm run test:api    # Run pytest API tests
+npm run report      # Open the Playwright HTML report
+```
+
+## ✅ Testing
+
+### Run Playwright E2E tests
+
+By default, Playwright targets the deployed Vercel portfolio URL defined in `playwright.config.ts`.
+
+```bash
+npm test
+```
+
+To run against a specific deployment, set `PLAYWRIGHT_BASE_URL` before launching the suite.
+
+If Vercel Deployment Protection is enabled for previews, provide `VERCEL_BYPASS_TOKEN` so the tests can access the deployment.
+
+### Run API tests
+
+```bash
+npm run test:api
+```
+
+The API tests validate `src/api/index.py` directly with `pytest`.
+
+### Open the Playwright HTML report
+
 ```bash
 npm run report
 ```
 
-## 🚀 GitHub Pages Setup
+## 🚀 Deployment
 
-To host your own version of this portfolio:
-1. Go to your repository settings on GitHub.
-2. Select **Pages** from the sidebar.
-3. Under **Build and deployment** > **Source**, select **GitHub Actions**.
-4. Once you push your changes to the `main` branch, the deployment will start automatically!
+## Vercel
 
----
+The repository is configured for Vercel deployment:
 
-## 🚀 Vercel Deployment
+- `npm run build` generates the frontend bundle in `dist/`
+- `vercel.json` rewrites `/api/(.*)` requests to `src/api/index.py`
+- The contact form backend runs as a stateless Vercel Function
+- Preview environments can be deployed and validated automatically from GitHub pull requests
 
-This project is optimized for deployment on Vercel:
+The GitHub Actions workflow in `.github/workflows/vercel-deployment.yml` does the following for pull requests:
 
-1. Connect your GitHub repository to Vercel.
-2. Vercel will automatically detect the project and deploy it.
-3. The serverless function in `/src/api/index.py` will handle form submissions using Python/Flask.
-4. UI will interact with the API seamlessly using the rewrites in `vercel.json`.
+1. Builds and deploys a Vercel preview
+2. Runs the Playwright suite against the preview URL
+3. Uploads the Playwright report as a workflow artifact
 
----
+Required repository secrets for that workflow include:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `VERCEL_BYPASS_TOKEN` when deployment protection is enabled
+
+## GitHub Pages
+
+The repository can also publish the static frontend with GitHub Pages when only the frontend output is needed.
 
 ## ✨ Skills Demonstrated
 
-- **Architecture**: Implementing the Page Object Model to minimize code duplication.
-- **Asynchronous Programming**: Handling `async/await` patterns for reliable UI interactions.
-- **Error Handling**: Using Playwright traces and screenshots to debug flaky tests.
-- **Configuration**: Customizing test execution environments and browser options.
-- **Testing Logic**: Writing meaningful assertions and handling dynamic page content.
+- Test architecture using the Page Object Model pattern
+- Browser automation with Playwright and TypeScript
+- Backend validation with `pytest`
+- Frontend development with React and Vite
+- Deployment-aware QA workflows for Vercel-hosted applications
 
 ---
-*Created as part of my QA Automation journey to showcase skills in modern testing frameworks.*
+
+Created as a QA automation portfolio project to demonstrate modern testing, API validation, and deployment practices.
