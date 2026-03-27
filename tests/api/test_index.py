@@ -13,7 +13,6 @@ def client():
         yield client
 
 def test_contact_success(client):
-    """Test successful submission of the contact form."""
     data = {
         "name": "John Doe",
         "email": "john@example.com",
@@ -27,7 +26,6 @@ def test_contact_success(client):
     assert json_data['receivedData']['email'] == "john@example.com"
 
 def test_contact_missing_fields(client):
-    """Test submission with missing required fields."""
     data = {
         "name": "John Doe"
     }
@@ -37,14 +35,12 @@ def test_contact_missing_fields(client):
     assert json_data['error'] == "Missing required fields"
 
 def test_contact_invalid_json(client):
-    """Test submission with invalid or missing JSON."""
     response = client.post('/api/contact', data="not a json", content_type='application/json')
     assert response.status_code == 400
     json_data = response.get_json()
     assert json_data['error'] == "Invalid or missing JSON"
 
 def test_contact_no_data(client):
-    """Test submission with no data at all."""
     response = client.post('/api/contact')
     assert response.status_code == 400
     json_data = response.get_json()
