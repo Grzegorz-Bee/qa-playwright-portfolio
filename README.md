@@ -134,6 +134,8 @@ npm run test:ui     # Run Playwright in UI mode
 npm run test:unit   # Run Vitest unit tests
 npm run test:api    # Run pytest API tests
 npm run report      # Open the Playwright HTML report
+npm run report:allure      # Generate the Allure HTML report from allure-results/
+npm run report:allure:open # Open the generated Allure HTML report
 ```
 
 ## ✅ Testing
@@ -164,6 +166,24 @@ The API tests validate `src/api/index.py` directly with `pytest`.
 npm run report
 ```
 
+### Generate and open the Allure report
+
+Playwright now also writes raw Allure data to `allure-results/` on every run.
+
+Generate the static Allure HTML report:
+
+```bash
+npm run report:allure
+```
+
+Open the generated report locally:
+
+```bash
+npm run report:allure:open
+```
+
+In GitHub Actions, the scheduled E2E workflow uploads both `allure-results` and the generated `allure-report` as artifacts alongside the Playwright HTML report.
+
 ## 🚀 Deployment
 
 ## Vercel
@@ -179,7 +199,7 @@ The GitHub Actions workflow in `.github/workflows/vercel-deployment.yml` does th
 
 1. Builds and deploys a Vercel preview
 2. Runs the Playwright suite against the preview URL
-3. Uploads the Playwright report as a workflow artifact
+3. Uploads the Playwright HTML report, Allure results, and the generated Allure report as workflow artifacts
 
 Required repository secrets for that workflow include:
 

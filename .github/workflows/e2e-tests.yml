@@ -21,6 +21,9 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
+    - name: Generate Allure report
+      if: ${{ !cancelled() }}
+      run: npm run report:allure
     - name: Upload Playwright report
       id: playwright-report
       uses: actions/upload-artifact@v4
@@ -29,8 +32,26 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Upload Allure results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: allure-results
+        path: allure-results/
+        retention-days: 30
+    - name: Upload Allure report
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: allure-report
+        path: allure-report/
+        retention-days: 30
     - name: Add Playwright report to run summary
       if: always()
       run: |
         echo "## 🎭 Playwright Report" >> $GITHUB_STEP_SUMMARY
         echo "[Download HTML Report](../artifacts/playwright-report)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🧪 Allure Report" >> $GITHUB_STEP_SUMMARY
+        echo "[Download Allure HTML Report](../artifacts/allure-report)" >> $GITHUB_STEP_SUMMARY
+        echo "[Download raw Allure results](../artifacts/allure-results)" >> $GITHUB_STEP_SUMMARY
