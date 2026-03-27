@@ -50,8 +50,7 @@ jobs:
       if: always()
       run: |
         echo "## 🎭 Playwright Report" >> $GITHUB_STEP_SUMMARY
-        echo "[Download HTML Report](../artifacts/playwright-report)" >> $GITHUB_STEP_SUMMARY
+        echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "## 🧪 Allure Report" >> $GITHUB_STEP_SUMMARY
-        echo "[Download Allure HTML Report](../artifacts/allure-report)" >> $GITHUB_STEP_SUMMARY
-        echo "[Download raw Allure results](../artifacts/allure-results)" >> $GITHUB_STEP_SUMMARY
+        echo "Download from Artifacts section in this run 👇" >> $GITHUB_STEP_SUMMARY
