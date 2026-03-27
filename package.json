@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "npx playwright test",
     "test:unit": "vitest run",
-    "test:api": "pytest tests/api",
+    "test:api": "node -e \"const {spawnSync}=require('child_process'); const {existsSync}=require('fs'); const paths=[process.platform==='win32'?'.venv\\\\Scripts\\\\python.exe':'.venv/bin/python', process.platform==='win32'?'python.exe':'python', 'python3']; const python=paths.find((candidate)=>candidate.includes('.venv')?existsSync(candidate):true); if(!python){console.error('No Python interpreter found.'); process.exit(1);} const result=spawnSync(python,['-m','pytest','tests/api'],{stdio:'inherit', shell:false}); if(result.error){console.error(result.error.message); process.exit(1);} process.exit(result.status ?? 1);\"",
     "test:ui": "npx playwright test --ui",
     "report": "npx playwright show-report",
     "prepare": "husky"
