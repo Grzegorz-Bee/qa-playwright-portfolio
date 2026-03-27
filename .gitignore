@@ -6,3 +6,5 @@ playwright/.cache/
 dist/
 .venv/
 .env
+.vercel
+.env*.local
