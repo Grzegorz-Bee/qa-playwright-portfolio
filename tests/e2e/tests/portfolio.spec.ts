@@ -39,8 +39,10 @@ test.describe('Portfolio Page Functionality', () => {
     }
 
     const apiTools = await portfolioPage.techStack.getSkillTags(portfolioPage.techStack.apiTestingCard);
-    expect(apiTools.some(t => t.includes('Postman'))).toBeTruthy();
-    expect(apiTools.some(t => t.includes('Axios'))).toBeTruthy();
+    const expectedApiTools = ['Postman', 'RestAssured', 'Proxyman'];
+    for (const tool of expectedApiTools) {
+      expect(apiTools.some(t => t.includes(tool))).toBeTruthy();
+    }
 
     const cicdTools = await portfolioPage.techStack.getSkillTags(portfolioPage.techStack.cicdCard);
     expect(cicdTools.some(t => t.includes('GitHub Actions'))).toBeTruthy();
