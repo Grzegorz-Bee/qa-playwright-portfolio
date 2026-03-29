@@ -1,2 +1,33 @@
-npm run test:unit
-npm run test:api
+#!/usr/bin/env sh
+set -e
+
+run_npm_script() {
+  script_name="$1"
+
+  if command -v npm >/dev/null 2>&1; then
+    npm run "$script_name"
+    return
+  fi
+
+  if command -v npm.cmd >/dev/null 2>&1; then
+    npm.cmd run "$script_name"
+    return
+  fi
+
+  if command -v cygpath >/dev/null 2>&1 && [ -n "$USERPROFILE" ]; then
+    userprofile_unix="$(cygpath -u "$USERPROFILE")"
+
+    for candidate in "$userprofile_unix"/AppData/Roaming/JetBrains/IntelliJIdea*/node/versions/*/npm.cmd; do
+      if [ -f "$candidate" ]; then
+        cmd.exe /d /s /c "\"$(cygpath -w "$candidate")\" run $script_name"
+        return
+      fi
+    done
+  fi
+
+  echo "npm was not found in PATH or JetBrains bundled Node locations." >&2
+  exit 127
+}
+
+run_npm_script test:unit
+run_npm_script test:api

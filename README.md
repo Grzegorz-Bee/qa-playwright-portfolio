@@ -223,3 +223,12 @@ The repository can also publish the static frontend with GitHub Pages when only 
 ---
 
 Created as a QA automation portfolio project to demonstrate modern testing, API validation, and deployment practices.
+
+## Contact form email delivery
+
+- The contact form posts to `/api/contact`, which now sends email through `Resend`.
+- Configure these environment variables locally and in Vercel:
+  - `RESEND_API_KEY`
+  - `CONTACT_RECIPIENT_EMAIL`
+  - `CONTACT_SENDER_EMAIL` (optional, defaults to `Portfolio Contact <onboarding@resend.dev>`)
+- For production on Vercel, add the values in project environment variables rather than committing secrets.
