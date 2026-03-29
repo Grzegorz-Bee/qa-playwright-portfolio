@@ -20,7 +20,7 @@ def test_contact_success(client, monkeypatch):
     def fake_send_contact_email(name, email, message):
         return {"id": "email_123", "name": name, "email": email, "message": message}
 
-    monkeypatch.setattr('src.api.index.send_contact_email', fake_send_contact_email)
+    monkeypatch.setattr('src.api.contact_api.send_contact_email', fake_send_contact_email)
 
     data = {
         "name": "John Doe",
@@ -46,7 +46,7 @@ def test_contact_email_provider_failure(client, monkeypatch):
     def fake_send_contact_email(name, email, message):
         raise RuntimeError('Email delivery failed')
 
-    monkeypatch.setattr('src.api.index.send_contact_email', fake_send_contact_email)
+    monkeypatch.setattr('src.api.contact_api.send_contact_email', fake_send_contact_email)
 
     response = client.post('/api/contact', json={
         "name": "John Doe",
@@ -61,7 +61,7 @@ def test_contact_email_provider_failure(client, monkeypatch):
 
 def test_contact_missing_email_configuration(client, monkeypatch):
     monkeypatch.delenv('RESEND_API_KEY', raising=False)
-    monkeypatch.setattr('src.api.index.send_contact_email', lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError('Email delivery is not configured')))
+    monkeypatch.setattr('src.api.contact_api.send_contact_email', lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError('Email delivery is not configured')))
 
     response = client.post('/api/contact', json={
         "name": "John Doe",
