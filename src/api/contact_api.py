@@ -2,7 +2,6 @@ import json
 import os
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
