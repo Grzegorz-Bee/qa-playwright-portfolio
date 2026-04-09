@@ -24,8 +24,11 @@ test.describe('Contact Form Functionality', () => {
       message: 'Hello, this is a test message!'
     };
 
-    // Intercept API call
+    let submittedPayload: Record<string, string> | null = null;
+
     await page.route('**/api/contact', async (route) => {
+      submittedPayload = route.request().postDataJSON() as Record<string, string>;
+
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -36,6 +39,8 @@ test.describe('Contact Form Functionality', () => {
     await portfolioPage.contact.fillForm(contactData);
     await portfolioPage.contact.submit();
 
+    expect(submittedPayload).toEqual(contactData);
+
     await expect(portfolioPage.contact.statusMessage).toBeVisible();
     await expect(portfolioPage.contact.statusMessage).toHaveText('Success! Your message has been received.');
     await expect(portfolioPage.contact.statusMessage).toHaveClass(/success/);
@@ -45,24 +50,23 @@ test.describe('Contact Form Functionality', () => {
   });
 
   test('should show error message on API failure', async ({ page }) => {
-    // Intercept API call with error
     await page.route('**/api/contact', async (route) => {
       await route.fulfill({
-        status: 400,
+        status: 500,
         contentType: 'application/json',
-        body: JSON.stringify({ error: 'Invalid email address' }),
+        body: JSON.stringify({ error: 'Email delivery failed' }),
       });
     });
 
     await portfolioPage.contact.fillForm({
       name: 'Tester',
       email: 'test@example.com',
-      message: 'Short'
+      message: 'Test message'
     });
     await portfolioPage.contact.submit();
 
     await expect(portfolioPage.contact.statusMessage).toBeVisible();
-    await expect(portfolioPage.contact.statusMessage).toHaveText('Invalid email address');
+    await expect(portfolioPage.contact.statusMessage).toHaveText('Email delivery failed');
     await expect(portfolioPage.contact.statusMessage).toHaveClass(/error/);
   });
 
