@@ -1,15 +1,15 @@
-import json
 import os
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
+import requests
 
 def send_contact_email(name, email, message):
     resend_api_key = os.environ.get('RESEND_API_KEY')
     recipient_email = os.environ.get('CONTACT_RECIPIENT_EMAIL')
-    sender_email = os.environ.get('CONTACT_SENDER_EMAIL', 'Portfolio Contact <onboarding@resend.dev>')
+    sender_email = os.environ.get(
+        'CONTACT_SENDER_EMAIL',
+        'Portfolio Contact <onboarding@resend.dev>'
+    )
 
     if not resend_api_key or not recipient_email:
         raise RuntimeError('Email delivery is not configured')
@@ -22,25 +22,21 @@ def send_contact_email(name, email, message):
         'text': f'Name: {name}\nEmail: {email}\n\nMessage:\n{message}',
     }
 
-    req = Request(
-        'https://api.resend.com/emails',
-        data=json.dumps(payload).encode('utf-8'),
+    response = requests.post(
+        "https://api.resend.com/emails",
         headers={
-            'Authorization': f'Bearer {resend_api_key}',
-            'Content-Type': 'application/json',
+            "Authorization": f"Bearer {resend_api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0",  # 👈 important
         },
-        method='POST',
+        json=payload,
+        timeout=10,
     )
 
-    try:
-        with urlopen(req, timeout=10) as response:
-            response_body = response.read().decode('utf-8')
-            return json.loads(response_body) if response_body else {}
-    except HTTPError as exc:
-        details = exc.read().decode('utf-8')
-        raise RuntimeError(details or 'Email delivery failed') from exc
-    except URLError as exc:
-        raise RuntimeError('Unable to reach the email delivery service') from exc
+    if response.status_code >= 400:
+        raise RuntimeError(response.text)
+
+    return response.json()
 
 
 def create_contact_app(route_path):
